@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- Affiliate Commission Rule -->
+		<record id="affiliate_commission_rule_view" model="ir.ui.view">
+			<field name="name">affiliate.commission.rule.tree</field>
+			<field name="model">affiliate.commission.rule</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Affiliate Commission Rule">
+					<field name="sequence" widget="handle" />
+					<field name="name" />
+					<field name="company_id" groups="base.group_multi_company" />
+					<field name="type" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="affiliate_commission_rule_form_view"
+			model="ir.ui.view">
+			<field name="name">affiliate.commission.rule.form</field>
+			<field name="model">affiliate.commission.rule</field>
+			<field name="arch" type="xml">
+				<form string="Affiliate Commission Rule">
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="type" />
+							</group>
+							<group>
+								<field name="company_id" groups="base.group_multi_company"
+									options="{'no_create': True}" />
+								<field name="product_category_ids" widget="many2many_tags"
+									attrs="{'invisible': [('type','!=','category')], 'required': [('type','=','category')]}" />
+								<field name="affiliate_comm_percentage"
+									attrs="{'invisible': [('type','not in', ('all', 'category'))], 'required': [('type','in', ('all', 'category'))]}" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Product Commission Details"
+								attrs="{'invisible': [('type', 'not in', ('product', 'product_tmpl'))]}">
+								<field name="line_ids" nolabel="1">
+									<tree string="Commission Details" editable="bottom">
+										<field name="sequence" widget="handle" />
+										<field name="product_tmpl_id"
+											context="{'default_type': 'product'}" />
+										<field name="product_id"
+											groups="product.group_product_variant"
+											context="{'default_type': 'product'}" />
+										<field name="affiliate_comm_percentage" />
+									</tree>
+								</field>
+							</page>
+							<page name="description" string="Description">
+								<field name="description" nolabel="1" />
+							</page>
+							<page name="accounting" string="Accounting">
+								<group>
+									<field name="commission_product_id" />
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" groups="base.group_user" />
+						<field name="message_ids"/>
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_affiliate_commission_rule">
+			<field name="name">Commission Rules</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.commission.rule</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{}</field>
+		</record>
+
+		<menuitem id="affiliate_commission_rule_menu"
+			parent="menu_affiliate_config"
+			action="action_affiliate_commission_rule" sequence="10" />
+
+	</data>
+</odoo>

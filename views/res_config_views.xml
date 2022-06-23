@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record id="res_config_settings_view_form" model="ir.ui.view">
+			<field name="name">res.config.settings.view.form.inherit.affiliate
+			</field>
+			<field name="model">res.config.settings</field>
+			<field name="priority" eval="1000" />
+			<field name="inherit_id"
+				ref="base.res_config_settings_view_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//div[hasclass('settings')]" position="inside">
+					<div class="app_settings_block" data-string="Affiliate"
+						string="Affiliate" data-key="to_affiliate"
+						groups="to_affiliate.group_to_affiliate">
+						<h2>Affiliate Management</h2>
+						<div class="row mt16 o_settings_container">
+							<div class="col-xs-12 col-md-6 o_setting_box">
+								<div class="o_setting_left_pane">
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="affiliate_comm_percentage" />
+									<div class="content-group">
+										<div class="mt16">
+											<field name="affiliate_comm_percentage" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-6 o_setting_box">
+								<div class="o_setting_left_pane">
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="cookie_age" />
+									<div class="content-group">
+										<div class="mt16">
+											<field name="cookie_age" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-6 o_setting_box">
+								<div class="o_setting_left_pane">
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="affiliate_min_payout" />
+									<div class="content-group">
+										<div class="mt16">
+											<field name="affiliate_min_payout" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-6 o_setting_box">
+								<div class="o_setting_left_pane">
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="commission_product_id" />
+									<div class="content-group">
+										<div class="mt16">
+											<field name="commission_product_id" required="1"/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-6 o_setting_box">
+								<div class="o_setting_left_pane">
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="compute_aff_method" />
+									<div class="content-group">
+										<div class="mt16">
+											<field name="compute_aff_method" required="1" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="action_to_affiliate_configuration"
+			model="ir.actions.act_window">
+			<field name="name">Configure Affiliate</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.config.settings</field>
+			<field name="view_mode">form</field>
+			<field name="target">inline</field>
+			<field name="context">{'module' : 'to_affiliate'}</field>
+		</record>
+
+		<menuitem id="menu_affiliate_general_settings"
+			name="Settings" parent="menu_affiliate_config"
+			sequence="0" action="action_to_affiliate_configuration"
+			groups="group_to_affiliate" />
+
+	</data>
+</odoo>

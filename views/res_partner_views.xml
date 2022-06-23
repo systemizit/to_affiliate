@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+		<record id="to_affiliate_partner_inherit_search"
+			model="ir.ui.view">
+			<field name="name">to.affiliate.partner.inherit.search</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="affcode_ids"
+						groups="sales_team.group_sale_salesman" />
+				</xpath>
+				<xpath expr="//filter[@name='supplier']" position="after">
+					<filter string="Affiliate" name="is_affiliate"
+						domain="[('is_affiliate', '=', True)]" />
+				</xpath>
+				<xpath expr="//filter[@name='salesperson']" position="after">
+					<filter string="Affiliate Code" name="group_affiliate"
+						context="{'group_by':'affcode_ids'}"
+						groups="sales_team.group_sale_salesman" />
+				</xpath>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_affiliate_partner">
+			<field name="name">Affiliate Partners</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_mode">kanban,tree,form</field>
+			<field name="context">{'search_default_is_affiliate':1,'group_by':[]}</field>
+		</record>
+
+		<menuitem id="affiliate_partner_menu"
+			parent="menu_affiliate_main"
+			action="action_affiliate_partner" sequence="99" />
+	</data>
+</odoo>

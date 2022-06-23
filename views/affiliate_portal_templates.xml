@@ -1,0 +1,75 @@
+<odoo>
+	<template id="portal_my_home_menu_affiliate"
+		name="Portal layout: affiliate menu entries"
+		inherit_id="portal.portal_breadcrumbs" priority="21">
+		<xpath expr="//ol[hasclass('o_portal_submenu')]"
+			position="inside">
+			<!-- Breadcrumb -->
+			<li t-if="page_name == 'Affiliate' or affiliate_commissions"
+				t-attf-class="breadcrumb-item #{'active ' if not affiliate_commissions else ''}">
+				<a t-if="affiliate_commissions"
+					t-attf-href="/my/affiliate/commissions?{{ keep_query() }}">My Affiliate Commissions</a>
+				<t t-else="">Affiliate</t>
+			</li>
+		</xpath>
+	</template>
+
+	<template id="portal_my_home_affiliate"
+		name="Portal My Home: affiliate entries"
+		inherit_id="portal.portal_my_home" priority="21" customize_show="True">
+		<xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+			<t t-call="portal.portal_docs_entry">
+				<t t-set="title">My Affiliate Commissions</t>
+				<t t-set="url" t-value="'/my/affiliate/commissions'" />
+				<t t-set="placeholder_count" t-value="'aff_commission_count'" />
+			</t>
+		</xpath>
+	</template>
+
+	<template id="portal_my_affiliate" name="Affiliate">
+		<t t-call="portal.portal_layout">
+			<t t-set="breadcrumbs_searchbar" t-value="True" />
+			<t t-call="portal.portal_searchbar">
+				<t t-set="title">Affiliate</t>
+			</t>
+			<t t-if="not affiliate_commissions">
+				<div class="alert alert-warning mt8" role="alert">
+					There are currently no affiliate commission for your account.
+				</div>
+			</t>
+			<t t-elif="affiliate_commissions">
+				<div class="table-responsive border rounded border-top-0">
+					<table
+						class="table rounded mb-0 bg-white o_portal_my_doc_table">
+						<thead>
+							<tr class="active">
+								<th>Name</th>
+								<th>Date</th>
+								<th>Commission</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<t t-foreach="affiliate_commissions" t-as="comm">
+								<tr>
+									<td>
+										<span t-field="comm.name" />
+									</td>
+									<td>
+										<span t-field="comm.date" />
+									</td>
+									<td>
+										<span t-field="comm.comm_amount" />
+									</td>
+									<td>
+										<span t-field="comm.state" />
+									</td>
+								</tr>
+							</t>
+						</tbody>
+					</table>
+				</div>
+			</t>
+		</t>
+	</template>
+</odoo>

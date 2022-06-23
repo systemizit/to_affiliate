@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record id="affiliate_commission_line_view_form"
+			model="ir.ui.view">
+			<field name="name">affiliate.commission.line.form</field>
+			<field name="model">affiliate.commission.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Commission Line">
+					<header>
+						<field name="state" readonly="1"
+							statusbar_visible="draft,confirm,submit,comm_paid"
+							widget="statusbar" />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="product_id" />
+								<field name="total" />
+								<field name="affiliate_comm_percentage" />
+								<field name="comm_amount" />
+								<field name="currency_id"
+									groups="base.group_multi_currency" />
+							</group>
+							<group>
+								<field name="partner_id" />
+								<field name="affcode_id" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="to_affiliate_com_line_tree_view" model="ir.ui.view">
+			<field name="name">affiliate.commission.line.tree</field>
+			<field name="model">affiliate.commission.line</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Affiliate Commission Lines" create="false"
+					edit="false" decoration-info="state == 'draft'"
+					decoration-success="state == 'comm_paid'"
+					decoration-muted="state in ('cancel')">
+					<field name="product_id" />
+					<field name="total" />
+					<field name="affiliate_comm_percentage" />
+					<field name="comm_amount" />
+					<field name="currency_id" groups="base.group_multi_currency" />
+					<field name="partner_id" />
+					<field name="affcode_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_affiliate_com_line_tree_view">
+			<field name="name">Affiliate Commission Lines</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.commission.line</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="context">{}</field>
+		</record>
+
+		<menuitem id="menu_affiliate_com_line"
+			parent="menu_affiliate_main"
+			action="action_affiliate_com_line_tree_view"
+			name="Commission Details" sequence="1" />
+	</data>
+</odoo>

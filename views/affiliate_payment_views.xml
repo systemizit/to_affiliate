@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- Affiliate Payment -->
+		<menuitem id="menu_affiliate_billing_main"
+			parent="menu_affiliate" name="Commission Payment" sequence="2" />
+
+		<record id="affiliate_payment_view" model="ir.ui.view">
+			<field name="name">affiliate.payment.tree</field>
+			<field name="model">affiliate.payment</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Affiliate Commission Payments"
+					decoration-info="state == 'draft'"
+					decoration-success="state == 'paid'"
+					decoration-muted="state in ('cancel')">
+					<field name="name" />
+					<field name="partner_id" />
+					<field name="date" />
+					<field name="total" />
+					<field name="state" />
+					<field name="company_currency_id" invisible="1"/>
+					<field name="company_id" groups="base.group_multi_company" optional="hide"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="affiliate_payment_form_view" model="ir.ui.view">
+			<field name="name">affiliate.payment.form</field>
+			<field name="model">affiliate.payment</field>
+			<field name="arch" type="xml">
+				<form string="Affiliate Payment">
+					<header>
+						<button name="action_confirm" type="object" states="draft"
+							string="Submit" class="oe_highlight" />
+						<button name="action_compute" type="object" states="draft"
+							string="Compute Commission"
+							help="Click to get the confirmed commissions for paying out." />
+						<button name="action_approve" type="object"
+							groups="to_affiliate.group_to_affiliate_user" states="confirm"
+							string="Approve" class="oe_highlight" />
+						<button name="action_cancel" type="object"
+							groups="to_affiliate.group_to_affiliate_user"
+							states="draft,confirm,approve" string="Reject" />
+						<button name="action_draft" type="object"
+							groups="to_affiliate.group_to_affiliate_user" states="cancel"
+							string="Set to Draft" class="oe_highlight" />
+						<field name="state" readonly="1"
+							statusbar_visible="draft,confirm,approve,paid" widget="statusbar" />
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="action_view_invoice" type="object"
+								class="oe_stat_button" icon="fa-pencil-square-o"
+								attrs="{'invisible': [('invoice_ids_count', '=', 0)]}">
+								<field name="invoice_ids_count" widget="statinfo"
+									string="Invoices" />
+							</button>
+						</div>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only" />
+							<h1>
+								<field name="name" class="oe_inline" readonly="1" />
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="partner_id" />
+								<field name="reference" />
+							</group>
+							<group>
+								<field name="date" />
+								<field name="company_currency_id" invisible="1"/>
+								<field name="company_id" groups="base.group_multi_company" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Commissions">
+								<field name="com_ids" nolabel="1">
+									<tree>
+										<field name="name" />
+										<field name="date" />
+										<field name="currency_id" invisible="1"/>
+										<field name="comm_amount" />
+										<field name="state" invisible="1" />
+									</tree>
+								</field>
+								<group class="oe_subtotal_footer oe_right">
+									<field name="total" class="oe_subtotal_footer_separator" />
+								</group>
+								<div class="oe_clear">
+									<label for="notes" />
+								</div>
+								<field name="notes" class="oe_inline"
+									placeholder="Additional notes..." />
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" groups="base.group_user" />
+						<field name="message_ids"/>
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_to_aff_payment_request_tree_view">
+			<field name="name">Payment Requests</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.payment</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{}</field>
+			<field name="domain">[('state','in',('draft','cancel'))]</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_to_aff_payment_approved_tree_view">
+			<field name="name">Requests to Approve</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.payment</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{}</field>
+			<field name="domain">[('state','in',('confirm','approve'))]</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_to_aff_payment_paid_tree_view">
+			<field name="name">Paid Requests</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.payment</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{}</field>
+			<field name="domain">[('state','=','paid')]</field>
+		</record>
+
+		<menuitem id="menu_to_aff_payment_request"
+			parent="menu_affiliate_billing_main"
+			action="action_to_aff_payment_request_tree_view" sequence="1" />
+		<menuitem id="menu_to_aff_payment_approved"
+			parent="menu_affiliate_billing_main"
+			action="action_to_aff_payment_approved_tree_view" sequence="2" />
+		<menuitem id="menu_to_aff_payment_paid"
+			parent="menu_affiliate_billing_main"
+			action="action_to_aff_payment_paid_tree_view" sequence="3" />
+
+		<!-- Portal -->
+
+		<record id="action_to_affiliate_com_portal"
+			model="ir.actions.act_window">
+			<field name="name">Commissions</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.commission</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help">We haven't sent you any commission.</field>
+		</record>
+
+	</data>
+</odoo>

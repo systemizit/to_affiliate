@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record id="view_account_invoice_report_search"
+			model="ir.ui.view">
+			<field name="name">account.invoice.report.search</field>
+			<field name="model">account.invoice.report</field>
+			<field name="inherit_id"
+				ref="account.view_account_invoice_report_search" />
+			<field name="arch" type="xml">
+				<xpath expr="//filter[@name='supplier']" position="after">
+					<filter string="Affiliate Commission" name="ftr_aff_comm"
+						domain="[('commission_id','!=',False)]" />
+					<filter string="None Affiliate Commission"
+						name="ftr_non_aff_comm" domain="[('commission_id','=',False)]" />
+				</xpath>
+				<xpath expr="//filter[@name='creditnote']" position="after">
+					<separator />
+					<filter string="Referred by Affiliate" name="ftr_aff_comm"
+						domain="[('affcode_id','!=',False)]" />
+				</xpath>
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<separator />
+					<field name="affcode_id" />
+					<field name="affiliate_partner_id" />
+				</xpath>
+				<xpath expr="//group/filter[@name='partner_id']"
+					position="after">
+					<separator />
+					<filter string="Affiliate Partner"
+						name="affiliate_partner_id"
+						context="{'group_by':'affiliate_partner_id','residual_visible':True}" />
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</odoo>

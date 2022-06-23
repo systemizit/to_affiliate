@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<!-- Affiliate Commission -->
+		<record id="to_affiliate_com_view" model="ir.ui.view">
+			<field name="name">affiliate.commission.tree</field>
+			<field name="model">affiliate.commission</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Affiliate Commission" create="0" edit="0"
+					decoration-info="state == 'draft'"
+					decoration-success="state == 'comm_paid'"
+					decoration-muted="state in ('cancel')">
+					<field name="name" />
+					<field name="partner_id" />
+					<field name="date" />
+					<field name="comm_amount" />
+					<field name="affcode_id" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+
+		<record id="to_affiliate_com_form_view" model="ir.ui.view">
+			<field name="name">affiliate.commission.form</field>
+			<field name="model">affiliate.commission</field>
+			<field name="arch" type="xml">
+				<form string="Affiliate Commission" create="0" edit="0">
+					<header>
+						<button name="action_confirm" type="object"
+							groups="to_affiliate.group_to_affiliate"
+							states="draft" string="Confirm" class="oe_highlight" />
+						<button name="action_cancel" type="object"
+							groups="to_affiliate.group_to_affiliate"
+							states="confirm" string="Cancel" />
+						<button name="action_draft" type="object"
+							groups="to_affiliate.group_to_affiliate_user"
+							states="cancel" string="Set to Draft" class="oe_highlight" />
+						<field name="state" readonly="1"
+							statusbar_visible="draft,confirm,submit,comm_paid"
+							widget="statusbar" />
+					</header>
+					<sheet>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="partner_id" />
+							</group>
+							<group>
+								<field name="date" />
+								<field name="affcode_id" />
+								<field name="currency_id"
+									groups="base.group_multi_currency" />
+								<field name="comm_amount" widget="monetary"
+									options="{'currency_field': 'currency_id'}" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Commission Details">
+								<field name="line_ids" nolabel="1">
+									<tree string="Commission Details" editable="bottom"
+										create="0">
+										<field name="product_id" />
+										<field name="total" sum="Total" />
+										<field name="affiliate_comm_percentage" />
+										<field name="comm_amount" sum="Total" />
+									</tree>
+								</field>
+							</page>							
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+						<field name="message_follower_ids"  groups="base.group_user" />
+						<field name="message_ids"/>
+					</div>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window"
+			id="action_to_affiliate_com_tree_view">
+			<field name="name">Affiliate Commissions</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">affiliate.commission</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{}</field>
+		</record>
+
+		<menuitem id="menu_affiliate_com"
+			parent="menu_affiliate_main"
+			action="action_to_affiliate_com_tree_view" name="Commission"
+			sequence="1" />
+
+	</data>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<menuitem id="menu_affiliate" name="Affiliate" sequence="21"
+			web_icon="to_affiliate,static/description/icon.png" 
+			groups="to_affiliate.group_to_affiliate_user" />
+		<menuitem id="menu_affiliate_main" parent="menu_affiliate"
+			name="Affiliate" sequence="1" />
+		<menuitem id="menu_affiliate_config" name="Configuration"
+			parent="menu_affiliate" sequence="20" />
+		<menuitem id="menu_affiliate_report" name="Reports"
+			parent="menu_affiliate" sequence="10" />
+	</data>
+</odoo>
